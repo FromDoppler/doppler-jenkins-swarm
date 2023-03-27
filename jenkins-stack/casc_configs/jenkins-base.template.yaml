@@ -1,0 +1,17 @@
+jenkins:
+  systemMessage: |+
+    Doppler Jenkins ${ENVIRONMENT}
+  numExecutors: 5
+  authorizationStrategy:
+    # https://plugins.jenkins.io/github-oauth/
+    # https://github.com/organizations/FromDoppler/settings/applications/2143648
+    github:
+      # Configuration permissions: management, create jobs, configuring jobs, etc
+      # In general, These kinds of changes should be done by code
+      adminUserNames: andresmoschini
+      # Usage permissions: start jobs, scan, view logs, etc
+      organizationNames: FromDoppler
+unclassified:
+  location:
+    adminAddress: "DevDoppler <devdoppler@fromdoppler.com>"
+    url: "https://${DOMAIN}/${JENKINS_PREFIX_SEGMENT}/"
