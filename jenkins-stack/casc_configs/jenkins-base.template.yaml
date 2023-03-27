@@ -1,0 +1,83 @@
+jenkins:
+  systemMessage: |+
+    Doppler Jenkins ${ENVIRONMENT}
+  numExecutors: 5
+  authorizationStrategy:
+    # https://plugins.jenkins.io/github-oauth/
+    # https://github.com/organizations/FromDoppler/settings/applications/2143648
+    github:
+      # Configuration permissions: management, create jobs, configuring jobs, etc
+      # In general, These kinds of changes should be done by code
+      adminUserNames: andresmoschini
+      # Usage permissions: start jobs, scan, view logs, etc
+      organizationNames: FromDoppler
+unclassified:
+  location:
+    adminAddress: "DevDoppler <devdoppler@fromdoppler.com>"
+    url: "https://${DOMAIN}/${JENKINS_PREFIX_SEGMENT}/"
+jobs:
+  - script: |
+      organizationFolder('FromDoppler') {
+        description('FromDoppler GitHubOrganization ${ENVIRONMENT}')
+        displayName('FromDoppler ${ENVIRONMENT}')
+        organizations {
+          github {
+            repoOwner('FromDoppler')
+            apiUri('https://api.github.com')
+            credentialsId('${GITHUB_ACCESS}')
+            traits {
+              gitHubBranchDiscovery {
+                strategyId(3)
+              }
+              gitHubPullRequestDiscovery {
+                strategyId(2)
+              }
+              gitHubTagDiscovery()
+              cloneOption {
+                extension {
+                  noTags(false)
+                  shallow(false)
+                  reference('')
+                  honorRefspec(false)
+                  timeout(10)
+                }
+              }
+              notificationContextTrait {
+                contextLabel('${CI_CONTEXT_LABEL}')
+                typeSuffix(true)
+              }
+              gitHubIgnoreDraftPullRequestFilter()
+              refSpecs {
+                templates {
+                  refSpecTemplate {
+                    value('+refs/heads/*:refs/remotes/@{remote}/*')
+                  }
+                }
+              }
+            }
+          }
+        }
+        projectFactories {
+          workflowMultiBranchProjectFactory {
+            scriptPath('${JENKINSFILE_NAME}')
+          }
+        }
+        buildStrategies {
+          buildChangeRequests {
+            ignoreTargetOnlyChanges(false)
+            ignoreUntrustedChanges(false)
+          }
+          buildNamedBranches {
+            filters {
+              regex {
+                regex('${BUILD_BRANCHES_REGEX}')
+                caseSensitive(true)
+              }
+            }
+          }
+          skipInitialBuildOnFirstBranchIndexing()
+        }
+        triggers {
+          cron('@daily')
+        }
+      }

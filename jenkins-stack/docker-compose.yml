@@ -1,0 +1,76 @@
+version: "3.8"
+
+x-logging: &default-logging
+  options:
+    max-size: "10m"
+    max-file: "5"
+  driver: json-file
+
+networks:
+  traefik:
+    external: true
+
+services:
+  jenkins:
+    image: ${DOCKER_REGISTRY-}dopplerdock/doppler-jenkins:${DOPPLER_JENKINS_VERSION:?}
+    secrets:
+      - source: casc__jenkins.secret.yaml
+        target: /jenkins-swarm/casc_configs/jenkins.secret.yaml
+      - source: casc__jenkins.secret.env.yaml
+        target: /jenkins-swarm/casc_configs/jenkins.secret.env.yaml
+    configs:
+      - source: casc__jenkins.yaml
+        target: /jenkins-swarm/casc_configs/jenkins.yaml
+    logging: *default-logging
+    environment:
+      - JENKINS_OPTS=--prefix=/${JENKINS_PREFIX_SEGMENT:?}
+      - CASC_JENKINS_CONFIG=/jenkins-swarm/casc_configs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins-data:/var/jenkins_home
+    networks:
+      - default
+      - traefik
+    depends_on:
+      - traefik
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4GB
+      placement:
+        constraints:
+          - node.labels.safevolumes == true
+          - node.platform.os == linux
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.services.jenkins_service_${ENVIRONMENT:?}.loadbalancer.server.port=8080"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.entrypoints=web_entry_point"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.middlewares=http_to_https@file"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.entrypoints=websecure_entry_point"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls=true"
+      replicas: 1
+      mode: replicated
+      restart_policy:
+        condition: on-failure
+
+secrets:
+  casc__jenkins.secret.yaml:
+    file: ${CASC_CONFIGS__JENKINS_SECRET_FILE:?CASC_CONFIGS__JENKINS_SECRET_FILE}
+    name: casc__jenkins_secret_${CASC_CONFIGS__JENKINS_SECRET_MD5:?CASC_CONFIGS__JENKINS_SECRET_MD5}
+  casc__jenkins.secret.env.yaml:
+    file: ${CASC_CONFIGS__JENKINS_SECRET_ENV_FILE:?CASC_CONFIGS__JENKINS_SECRET_ENV_FILE}
+    name: casc__jenkins_secret_env_${CASC_CONFIGS__JENKINS_SECRET_ENV_MD5:?CASC_CONFIGS__JENKINS_SECRET_ENV_MD5}
+
+configs:
+  casc__jenkins.yaml:
+    file: ${CASC_CONFIGS__JENKINS_BASE_FILE:?CASC_CONFIGS__JENKINS_BASE_FILE}
+    name: casc__jenkins_${CASC_CONFIGS__JENKINS_BASE_MD5:?CASC_CONFIGS__JENKINS_BASE_MD5}
+
+volumes:
+  jenkins-data:

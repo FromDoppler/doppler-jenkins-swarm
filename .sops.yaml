@@ -1,0 +1,7 @@
+creation_rules:
+  # PRODUCTION
+  - path_regex: ([.\/\\])([eE]ncrypted\.)?[sS]ecret\.(Production|prod|prod-2)(\..*)?$
+    pgp: "B4F97D4CC0C01B52E7A511769129190A43B3AC94"
+  # TEST, DEV AND SHARED
+  - path_regex: ([.\/\\])([eE]ncrypted\.)?[sS]ecret\.(Development|dev|Integration|int|QA|qa|shared|test)(\..*)?$
+    pgp: "4A7B4BBC409CC1082AA3569F2B6D3A4FC69903B4,B4F97D4CC0C01B52E7A511769129190A43B3AC94"

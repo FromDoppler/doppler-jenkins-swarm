@@ -33,13 +33,15 @@
     "cspell.json",
     "package-lock.json",
     "pnpm-lock.yaml",
-    "yarn.lock"
+    "yarn.lock",
+    "*.secret.*"
   ],
   "ignoreRegExpList": [
     "%[23][FD]\\w+",
     "&ntilde;",
     "\\.resx",
-    "eyJhbGciOiJ[a-zA-Z0-9\\._-]+"
+    "eyJhbGciOiJ[a-zA-Z0-9\\._-]+",
+    "ENC[AES256_GCM,data:.*,type:str]\n"
   ],
   "overrides": [
     {

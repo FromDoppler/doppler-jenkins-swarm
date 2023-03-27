@@ -17,6 +17,7 @@ ondragstart
 preheader
 testid
 valign
+envsubst
 
 # Own terms
 accountname
@@ -29,6 +30,10 @@ mseditor
 mydplr
 socialshare
 spanish
+safevolumes
+lastmodified
+andresmoschini
+PRODTEST
 
 # Technical terms
 automerge
@@ -37,6 +42,12 @@ Liskov
 nofile
 webfonts
 entrypoints
+cpus
+loadbalancer
+middlewares
+websecure
+ypted # Error: Unknown word (ypted), it comes from "encrypted"
+Refspec
 
 # our services and providers
 aspnet
@@ -70,3 +81,11 @@ whatsapp
 xunit
 dpkg
 debian
+casc
+jcasc
+traefik
+linux
+github
+gpgdata
+gnupg
+mozilla
