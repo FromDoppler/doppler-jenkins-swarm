@@ -15,3 +15,52 @@ unclassified:
   location:
     adminAddress: "DevDoppler <devdoppler@fromdoppler.com>"
     url: "https://${DOMAIN}/${JENKINS_PREFIX_SEGMENT}/"
+jobs:
+  - script: |
+      organizationFolder('FromDoppler') {
+        description('FromDoppler GitHubOrganization ${ENVIRONMENT}')
+        displayName('FromDoppler ${ENVIRONMENT}')
+        organizations {
+          github {
+            repoOwner('FromDoppler')
+            apiUri('https://api.github.com')
+            credentialsId('${GITHUB_ACCESS}')
+            traits {
+              gitHubBranchDiscovery {
+                strategyId(3)
+              }
+              gitHubPullRequestDiscovery {
+                strategyId(2)
+              }
+              notificationContextTrait {
+                contextLabel('${CI_CONTEXT_LABEL}')
+                typeSuffix(true)
+              }
+              gitHubIgnoreDraftPullRequestFilter()
+            }
+          }
+        }
+        projectFactories {
+          workflowMultiBranchProjectFactory {
+            scriptPath('${JENKINSFILE_NAME}')
+          }
+        }
+        buildStrategies {
+          buildChangeRequests {
+            ignoreTargetOnlyChanges(false)
+            ignoreUntrustedChanges(false)
+          }
+          buildNamedBranches {
+            filters {
+              regex {
+                regex('${BUILD_BRANCHES_REGEX}')
+                caseSensitive(true)
+              }
+            }
+          }
+          skipInitialBuildOnFirstBranchIndexing()
+        }
+        triggers {
+          cron('@daily')
+        }
+      }
