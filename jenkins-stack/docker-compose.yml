@@ -28,6 +28,7 @@ services:
       - CASC_JENKINS_CONFIG=/jenkins-swarm/casc_configs
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.gnupg:/root/.gnupg
       - jenkins-data:/var/jenkins_home
     networks:
       - default
