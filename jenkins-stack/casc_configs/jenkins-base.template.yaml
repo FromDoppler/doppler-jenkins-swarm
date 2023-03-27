@@ -37,6 +37,13 @@ jobs:
                 typeSuffix(true)
               }
               gitHubIgnoreDraftPullRequestFilter()
+              refSpecs {
+                templates {
+                  refSpecTemplate {
+                    value('+refs/heads/*:refs/remotes/@{remote}/*')
+                  }
+                }
+              }
             }
           }
         }
