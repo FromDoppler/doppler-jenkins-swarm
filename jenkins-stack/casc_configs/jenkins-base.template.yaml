@@ -33,6 +33,15 @@ jobs:
                 strategyId(2)
               }
               gitHubTagDiscovery()
+              cloneOption {
+                extension {
+                  noTags(false)
+                  shallow(false)
+                  reference('')
+                  honorRefspec(false)
+                  timeout(10)
+                }
+              }
               notificationContextTrait {
                 contextLabel('${CI_CONTEXT_LABEL}')
                 typeSuffix(true)
