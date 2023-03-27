@@ -32,6 +32,7 @@ jobs:
               gitHubPullRequestDiscovery {
                 strategyId(2)
               }
+              gitHubTagDiscovery()
               notificationContextTrait {
                 contextLabel('${CI_CONTEXT_LABEL}')
                 typeSuffix(true)
