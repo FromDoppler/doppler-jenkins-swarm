@@ -59,7 +59,7 @@ jobs:
         }
         projectFactories {
           workflowMultiBranchProjectFactory {
-            scriptPath('${JENKINSFILE_NAME}')
+            scriptPath('doppler-jenkins.groovy')
           }
         }
         buildStrategies {
