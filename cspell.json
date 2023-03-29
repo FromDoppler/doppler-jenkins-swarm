@@ -34,7 +34,8 @@
     "package-lock.json",
     "pnpm-lock.yaml",
     "yarn.lock",
-    "*.secret.*"
+    "*.secret.*",
+    "host-setup/ssh/*"
   ],
   "ignoreRegExpList": [
     "%[23][FD]\\w+",

@@ -26,3 +26,5 @@ package-lock.json
 *.env
 *.env.*
 *.[sS]ecret.*
+id_rsa.pub
+host-setup/ssh/*
