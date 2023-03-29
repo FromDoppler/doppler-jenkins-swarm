@@ -27,7 +27,7 @@ jobs:
             credentialsId('${GITHUB_ACCESS}')
             traits {
               gitHubBranchDiscovery {
-                strategyId(3)
+                strategyId(2)
               }
               gitHubPullRequestDiscovery {
                 strategyId(2)
