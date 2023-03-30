@@ -46,4 +46,3 @@ mkdir -p  ${sshPath}
 cp -n ./ssh/id_rsa.pub ${sshPath}
 cp -n ./ssh/known_hosts ${sshPath}
 cp -n ./ssh/id_rsa.secret.shared ${sshPath}/id_rsa
-
