@@ -16,6 +16,9 @@ block_comment_end = */
 [{en.js,es.js,*.sh,*.md,Dockerfile,.editorconfig,package.json,**/*.yml,**/*.yaml}]
 max_line_length = 220
 
+[*.md]
+indent_size = unset
+
 # Unset for binary and generated files
 [{**.svg,**.png,**/obj/**,**/bin/**,.vscode/**,**/Properties/launchSettings.json,**/*.[sS]ecret.*,yarn.lock,.doppler-ci,build/**,host-setup/ssh/*}]
 charset = unset
