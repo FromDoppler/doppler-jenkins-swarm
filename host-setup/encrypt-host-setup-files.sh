@@ -40,3 +40,7 @@ done
 sops \
   --output "./ssh/id_rsa.encrypted.secret.shared" \
   --encrypt "./ssh/id_rsa.secret.shared"
+
+sops \
+  --output "./docker/config.encrypted.secret.shared.json" \
+  --encrypt "./docker/config.secret.shared.json"
