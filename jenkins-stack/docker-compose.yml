@@ -27,10 +27,11 @@ services:
     networks:
       - default
     deploy:
-      resources:
-        limits:
-          cpus: "2"
-          memory: 4GB
+      # # Temporarily commented because our current server is smaller
+      # resources:
+      #   limits:
+      #     cpus: "2"
+      #     memory: 4GB
       placement:
         constraints:
           - node.labels.safevolumes == true
