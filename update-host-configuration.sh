@@ -17,7 +17,7 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh setup-host.sh [OPTIONS]"
+    echo "Usage: sh update-host-configuration.sh [OPTIONS]"
     echo ""
     echo "Prepare host for the Doppler Jenkins Swarm."
     echo ""
@@ -27,7 +27,7 @@ print_help () {
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  sh setup-host.sh"
+    echo "  sh update-host-configuration.sh"
 }
 
 for i in "$@" ; do
@@ -39,18 +39,18 @@ case $i in
 esac
 done
 
-sh ./decrypt-host-setup-files.sh
+sh ./host-setup/decrypt-host-setup-files.sh
 
 # Install ssh keys to allow to upload to our CDN
 sshPath="/var/lib/jenkins/.ssh"
-chmod 600 ./ssh/id_rsa.secret.shared
+chmod 600 ./host-setup/ssh/id_rsa.secret.shared
 mkdir -p  "${sshPath}"
-cp -n ./ssh/id_rsa.pub "${sshPath}"
-cp -n ./ssh/known_hosts "${sshPath}"
-mv -n ./ssh/id_rsa.secret.shared "${sshPath}/id_rsa"
+cp -n ./host-setup/ssh/id_rsa.pub "${sshPath}"
+cp -n ./host-setup/ssh/known_hosts "${sshPath}"
+mv -n ./host-setup/ssh/id_rsa.secret.shared "${sshPath}/id_rsa"
 
 # Docker login
 dockerPath="/root/.docker"
-chmod 600 ./docker/config.secret.shared.json
+chmod 600 ./host-setup/docker/config.secret.shared.json
 mkdir -p "${dockerPath}"
-mv -n ./docker/config.secret.shared.json "${dockerPath}"/config.json
+mv -n ./host-setup/docker/config.secret.shared.json "${dockerPath}"/config.json
