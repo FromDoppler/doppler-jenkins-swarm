@@ -52,6 +52,9 @@ middlewares
 websecure
 ypted # Error: Unknown word (ypted), it comes from "encrypted"
 Refspec
+exposedbydefault
+caserver
+yptresolver # Error: Unknown word (yptresolver), it comes from "letsencrypt"
 
 # our services and providers
 aspnet
@@ -93,3 +96,4 @@ github
 gpgdata
 gnupg
 mozilla
+letsencrypt

@@ -18,6 +18,7 @@ Note: _See [Initial host setup section](#initial-host-setup) if you are setting 
 
    ```shell
    sh /swarm-cd/update-host-configuration.sh
+   sh /swarm-cd/deploy-shared-stacks.sh
    sh /swarm-cd/deploy-test-stacks.sh
    sh /swarm-cd/deploy-prod-stacks.sh
    ```

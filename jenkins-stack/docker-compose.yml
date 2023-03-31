@@ -1,10 +1,15 @@
 version: "3.8"
+# cSpell:enableCompoundWords
 
 x-logging: &default-logging
   options:
     max-size: "10m"
     max-file: "5"
   driver: json-file
+
+networks:
+  traefik:
+    external: true
 
 services:
   jenkins:
@@ -26,6 +31,9 @@ services:
       - jenkins-data:/var/jenkins_home
     networks:
       - default
+      - traefik
+    depends_on:
+      - traefik
     deploy:
       # # Temporarily commented because our current server is smaller
       # resources:
@@ -36,6 +44,19 @@ services:
         constraints:
           - node.labels.safevolumes == true
           - node.platform.os == linux
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.services.jenkins_service_${ENVIRONMENT:?}.loadbalancer.server.port=8080"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.entrypoints=web_entry_point"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.middlewares=http_to_https@file"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.entrypoints=websecure_entry_point"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls=true"
+        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls.certResolver=letsencryptresolver"
       replicas: 1
       mode: replicated
       restart_policy:
