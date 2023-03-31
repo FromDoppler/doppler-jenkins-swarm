@@ -18,6 +18,10 @@ preheader
 testid
 valign
 envsubst
+keyrings
+dearmor
+containerd
+buildx
 
 # Own terms
 accountname
