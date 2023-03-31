@@ -17,17 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh setup-host.sh [OPTIONS]"
+    echo "Usage: sh deploy-test-stacks.sh [OPTIONS]"
     echo ""
-    echo "Prepare host for the Doppler Jenkins Swarm."
-    echo ""
-    echo "It requires SOPS installed with our private keys."
+    echo "Update test instance stacks."
     echo ""
     echo "Options:"
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  sh setup-host.sh"
+    echo "  sh deploy-test-stacks.sh"
 }
 
 for i in "$@" ; do
@@ -39,18 +37,4 @@ case $i in
 esac
 done
 
-sh ./decrypt-host-setup-files.sh
-
-# Install ssh keys to allow to upload to our CDN
-sshPath="/var/lib/jenkins/.ssh"
-chmod 600 ./ssh/id_rsa.secret.shared
-mkdir -p  "${sshPath}"
-cp -n ./ssh/id_rsa.pub "${sshPath}"
-cp -n ./ssh/known_hosts "${sshPath}"
-mv -n ./ssh/id_rsa.secret.shared "${sshPath}/id_rsa"
-
-# Docker login
-dockerPath="/root/.docker"
-chmod 600 ./docker/config.secret.shared.json
-mkdir -p "${dockerPath}"
-mv -n ./docker/config.secret.shared.json "${dockerPath}"/config.json
+sh ./jenkins-stack/deploy-jenkins-stack.sh -e=test
