@@ -1,0 +1,62 @@
+version: "3.8"
+# cSpell:enableCompoundWords
+
+x-logging: &default-logging
+  options:
+    max-size: "10m"
+    max-file: "5"
+  driver: json-file
+
+networks:
+  traefik:
+    external: true
+
+services:
+  traefik:
+    image: traefik:v2.9
+    command:
+      - "--log.level=WARN"
+      - "--accesslog=false"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web_entry_point.address=:80"
+      - "--entryPoints.websecure_entry_point.address=:443"
+      - "--providers.file.directory=/dynamic-config"
+      - "--certificatesResolvers.letsencryptresolver.acme.tlsChallenge=true"
+      - "--certificatesresolvers.letsencryptresolver.acme.caserver=${ACME_AUTHORITY_URL}"
+      - "--certificatesresolvers.letsencryptresolver.acme.email=${ACME_ACCOUNT}"
+      - "--certificatesresolvers.letsencryptresolver.acme.storage=/etc/traefik/acme/acme.json"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "18080:8080"
+    configs:
+      - source: dynamic_config_common.yml
+        target: /dynamic-config/common.yml
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-acme:/etc/traefik/acme
+    networks:
+      - traefik
+    logging: *default-logging
+    deploy:
+      labels:
+        - "swarmpit.service.deployment.autoredeploy=true"
+      replicas: 1 # because we are not sharing Let's Encrypt local
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.labels.safevolumes == true
+          - node.platform.os == linux
+
+volumes:
+  traefik-acme:
+
+configs:
+  dynamic_config_common.yml:
+    file: ${TRAEFIK_DYNAMIC_CONF_COMMON_FILE:?TRAEFIK_DYNAMIC_CONF_COMMON_FILE}
+    name: dynamic_config_common_${TRAEFIK_DYNAMIC_CONF_COMMON_MD5:?TRAEFIK_DYNAMIC_CONF_COMMON_MD5}
