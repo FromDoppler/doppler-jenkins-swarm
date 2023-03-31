@@ -38,6 +38,7 @@ safevolumes
 lastmodified
 andresmoschini
 PRODTEST
+cdhelper
 
 # Technical terms
 automerge

@@ -42,7 +42,8 @@
     "&ntilde;",
     "\\.resx",
     "eyJhbGciOiJ[a-zA-Z0-9\\._-]+",
-    "ENC[AES256_GCM,data:.*,type:str]\n"
+    "ENC\\[AES256_GCM,data:[^\"]+,type:str\\]",
+    "-----BEGIN PGP MESSAGE-----[^\"]+-----END PGP MESSAGE-----"
   ],
   "overrides": [
     {

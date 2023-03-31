@@ -17,13 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh deploy-swarmpit-stack.sh [OPTIONS]"
+    echo "Usage: sh decrypt-swarmpit-files.sh [OPTIONS]"
+    echo ""
+    echo "Decrypt files using SOPS"
     echo ""
     echo "Options:"
     echo "  -h, --help"
-    echo ""
+    echo
     echo "Examples:"
-    echo "  deploy-swarmpit-stack.sh"
+    echo "  sh decrypt-swarmpit-files.sh"
 }
 
 for i in "$@" ; do
@@ -35,13 +37,5 @@ case $i in
 esac
 done
 
-sh ./decrypt-swarmpit-files.sh
-
-set -a
-. "./.env"
-set +a
-
-docker stack deploy \
-    --with-registry-auth \
-    --compose-file docker-compose.yml \
-    "swarmpit"
+sops --output "./cd-helper/appsettings.Secret.shared.json" \
+  --decrypt "./cd-helper/appsettings.Encrypted.Secret.shared.json"
