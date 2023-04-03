@@ -45,3 +45,9 @@ docker stack deploy \
     --with-registry-auth \
     --compose-file docker-compose.yml \
     "swarmpit"
+
+echo ""
+echo "If it is a pristine installation, remember to define Swarmpit password and"
+echo "also setup a link to dockerhub registry for dopplerdock user in Registries"
+echo "section (http://jenkins.fromdoppler.net:10888/#/registries)."
+echo ""
