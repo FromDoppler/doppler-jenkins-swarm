@@ -38,6 +38,7 @@ safevolumes
 lastmodified
 andresmoschini
 PRODTEST
+cdhelper
 
 # Technical terms
 automerge
@@ -97,3 +98,5 @@ gpgdata
 gnupg
 mozilla
 letsencrypt
+swarmpit
+couchdb

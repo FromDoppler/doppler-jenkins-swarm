@@ -1,0 +1,161 @@
+version: "3.8"
+# cSpell:enableCompoundWords
+
+x-logging: &default-logging
+  options:
+    max-size: "10m"
+    max-file: "5"
+  driver: json-file
+
+services:
+  app:
+    image: swarmpit/swarmpit:1.9
+    logging: *default-logging
+    environment:
+      - SWARMPIT_DB=http://db:5984
+      - SWARMPIT_INFLUXDB=http://influxdb:8086
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 10888:8080
+    networks:
+      - default
+      - net
+    deploy:
+      labels:
+        - "swarmpit.service.deployment.autoredeploy=true"
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1024M
+        reservations:
+          cpus: "0.25"
+          memory: 512M
+      placement:
+        constraints:
+          - node.role == manager
+          - node.platform.os == linux
+
+  db:
+    image: couchdb:2.3.0
+    logging: *default-logging
+    volumes:
+      - db-data:/opt/couchdb/data
+    networks:
+      - net
+    deploy:
+      labels:
+        - "swarmpit.service.deployment.autoredeploy=true"
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: 256M
+        reservations:
+          cpus: "0.15"
+          memory: 128M
+      placement:
+        constraints:
+          - node.labels.safevolumes == true
+          - node.platform.os == linux
+
+  influxdb:
+    image: influxdb:1.7
+    logging: *default-logging
+    volumes:
+      - influx-data:/var/lib/influxdb
+    networks:
+      - net
+    deploy:
+      labels:
+        - "swarmpit.service.deployment.autoredeploy=true"
+      resources:
+        limits:
+          cpus: "0.60"
+          memory: 512M
+        reservations:
+          cpus: "0.30"
+          memory: 128M
+      placement:
+        constraints:
+          - node.labels.safevolumes == true
+          - node.platform.os == linux
+
+  agent:
+    image: swarmpit/agent:latest
+    logging: *default-logging
+    environment:
+      - DOCKER_API_VERSION=1.35
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - net
+    deploy:
+      mode: global
+      labels:
+        - "swarmpit.service.deployment.autoredeploy=true"
+        - "swarmpit.agent=true"
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: 64M
+        reservations:
+          cpus: "0.05"
+          memory: 32M
+      placement:
+        constraints:
+          - node.platform.os == linux
+
+  doppler-cd-helper:
+    image: dopplerdock/doppler-cd-helper:${CDHELPER_IMAGE_VERSION:?}
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:?}
+      BASEURL: https://${DOMAIN:?}/${CDHELPER_PREFIX_SEGMENT:?}
+    logging: *default-logging
+    networks:
+      - default
+      - traefik
+    depends_on:
+      - traefik
+    secrets:
+      - source: cdhelper__appsettings.Secret.json
+        target: appsettings.Secret.json
+    deploy:
+      placement:
+        constraints:
+          - node.platform.os == linux
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik"
+        - "traefik.http.services.cdhelper_service.loadbalancer.server.port=80"
+        - "traefik.http.routers.cdhelper_http_route.entrypoints=web_entry_point"
+        - "traefik.http.routers.cdhelper_http_route.service=cdhelper_service"
+        - "traefik.http.routers.cdhelper_http_route.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${CDHELPER_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.cdhelper_http_route.middlewares=http_to_https@file"
+        - "traefik.http.routers.cdhelper_https_route.entrypoints=websecure_entry_point"
+        - "traefik.http.routers.cdhelper_https_route.service=cdhelper_service"
+        - "traefik.http.routers.cdhelper_https_route.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${CDHELPER_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.cdhelper_https_route.tls=true"
+        - "traefik.http.routers.cdhelper_https_route.tls.certResolver=letsencryptresolver"
+        - "traefik.http.middlewares.strip_cdhelper_prefix.stripprefix.prefixes=/${CDHELPER_PREFIX_SEGMENT:?}"
+        - "traefik.http.middlewares.strip_cdhelper_prefix.stripprefix.forceslash=true"
+        - "traefik.http.routers.cdhelper_https_route.middlewares=strip_cdhelper_prefix"
+      replicas: 1
+      mode: replicated
+      restart_policy:
+        condition: on-failure
+
+networks:
+  net:
+    driver: overlay
+    attachable: true
+  traefik:
+    external: true
+
+volumes:
+  db-data:
+  influx-data:
+
+secrets:
+  cdhelper__appsettings.Secret.json:
+    file: ${CDHELPER_APPSETTINGS_SECRET_FILE:?}
+    name: cdhelper__appsettings_${CDHELPER_APPSETTINGS_SECRET_MD5:?}

@@ -17,15 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh deploy-shared-stacks.sh [OPTIONS]"
+    echo "Usage: sh encrypt-swarmpit-files.sh [OPTIONS]"
     echo ""
-    echo "Update shared stacks."
+    echo "Encrypt files using SOPS"
     echo ""
     echo "Options:"
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  sh deploy-shared-stacks.sh"
+    echo "  sh encrypt-swarmpit-files.sh"
 }
 
 for i in "$@" ; do
@@ -37,5 +37,5 @@ case $i in
 esac
 done
 
-sh ./traefik-stack/deploy-traefik-stack.sh
-sh ./swarmpit-stack/deploy-swarmpit-stack.sh
+sops --output "./cd-helper/appsettings.Encrypted.Secret.shared.json" \
+  --encrypt "./cd-helper/appsettings.Secret.shared.json"

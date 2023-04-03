@@ -17,15 +17,13 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh deploy-shared-stacks.sh [OPTIONS]"
-    echo ""
-    echo "Update shared stacks."
+    echo "Usage: sh deploy-swarmpit-stack.sh [OPTIONS]"
     echo ""
     echo "Options:"
     echo "  -h, --help"
-    echo
+    echo ""
     echo "Examples:"
-    echo "  sh deploy-shared-stacks.sh"
+    echo "  deploy-swarmpit-stack.sh"
 }
 
 for i in "$@" ; do
@@ -37,5 +35,19 @@ case $i in
 esac
 done
 
-sh ./traefik-stack/deploy-traefik-stack.sh
-sh ./swarmpit-stack/deploy-swarmpit-stack.sh
+sh ./decrypt-swarmpit-files.sh
+
+set -a
+. "./.env"
+set +a
+
+docker stack deploy \
+    --with-registry-auth \
+    --compose-file docker-compose.yml \
+    "swarmpit"
+
+echo ""
+echo "If it is a pristine installation, remember to define Swarmpit password and"
+echo "also setup a link to dockerhub registry for dopplerdock user in Registries"
+echo "section (http://jenkins.fromdoppler.net:10888/#/registries)."
+echo ""
