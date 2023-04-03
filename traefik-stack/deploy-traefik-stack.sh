@@ -38,7 +38,7 @@ esac
 done
 
 set -a
-. "./.env"
+. "./shared.env"
 set +a
 
 if [ -z "$(docker network ls | grep traefik | awk '{print $2}')" ] ; then

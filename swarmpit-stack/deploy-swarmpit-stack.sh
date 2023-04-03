@@ -38,7 +38,7 @@ done
 sh ./decrypt-swarmpit-files.sh
 
 set -a
-. "./.env"
+. "./shared.env"
 set +a
 
 docker stack deploy \
