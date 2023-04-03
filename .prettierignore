@@ -21,10 +21,11 @@ yarn.lock
 package-lock.json
 [eE]ncrypted.[sS]ecret.*
 *.key
-.doppler-ci
+doppler-jenkins-ci.groovy
 /build
 *.env
 *.env.*
 *.[sS]ecret.*
 id_rsa.pub
 host-setup/ssh/*
+**/*.GENERATED.*
