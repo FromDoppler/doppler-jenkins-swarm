@@ -57,7 +57,7 @@ services:
         - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
         - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls=true"
         - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls.certResolver=letsencryptresolver"
-      replicas: 1
+      replicas: ${REPLICAS:?}
       mode: replicated
       restart_policy:
         condition: on-failure
