@@ -17,15 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh deploy-traefik-stack.sh [OPTIONS]"
+    echo "Usage: sh verify-host-setup.sh [OPTIONS]"
     echo ""
-    echo "Deploy current folder's files into a Docker stack"
+    echo "Verify host setup files."
     echo ""
     echo "Options:"
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  deploy-traefik-stack.sh"
+    echo "  sh verify-host-setup.sh"
 }
 
 for i in "$@" ; do
@@ -37,14 +37,16 @@ case $i in
 esac
 done
 
-set -a
-. "./shared.env"
-set +a
+sh ./decrypt-host-setup-files.sh
 
-if [ -z "$(docker network ls | grep traefik | awk '{print $2}')" ] ; then
-    docker network create -d overlay --scope swarm traefik
-fi
-
-docker stack deploy \
-    --with-registry-auth \
-    --compose-file docker-compose.yml traefik
+expectedFiles="\
+  ./ssh/id_rsa.secret.shared \
+  ./ssh/known_hosts \
+  ./ssh/id_rsa.pub \
+  ./docker/config.secret.shared.json"
+for expectedFile in ${expectedFiles}; do
+  if ! [ -f "${expectedFile}" ]; then
+    echo "Error: ${expectedFile} does not exist."
+    exit 1
+  fi
+done

@@ -26,9 +26,9 @@ pipeline {
                 sh 'docker build --target verify-format .'
             }
         }
-        stage('Verify Compose files ') {
+        stage('Verify definition files') {
             steps {
-                sh 'sh ./jenkins-stack/verify-jenkins-compose-files.sh'
+                sh 'sh ./verify-all.sh'
             }
         }
     }

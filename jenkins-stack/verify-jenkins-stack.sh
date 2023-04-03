@@ -15,7 +15,7 @@ cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1
 export MSYS2_ARG_CONV_EXCL="*"
 
-environments="test"
+environments="test prod"
 for environment in ${environments}; do
 
     sh ./decrypt-jenkins-files.sh -e="${environment}"

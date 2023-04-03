@@ -17,15 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh deploy-traefik-stack.sh [OPTIONS]"
+    echo "Usage: sh verify-all.sh [OPTIONS]"
     echo ""
-    echo "Deploy current folder's files into a Docker stack"
+    echo "Verify all definition files."
     echo ""
     echo "Options:"
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  deploy-traefik-stack.sh"
+    echo "  sh verify-all.sh"
 }
 
 for i in "$@" ; do
@@ -37,14 +37,7 @@ case $i in
 esac
 done
 
-set -a
-. "./shared.env"
-set +a
-
-if [ -z "$(docker network ls | grep traefik | awk '{print $2}')" ] ; then
-    docker network create -d overlay --scope swarm traefik
-fi
-
-docker stack deploy \
-    --with-registry-auth \
-    --compose-file docker-compose.yml traefik
+sh ./host-setup/verify-host-setup.sh
+sh ./traefik-stack/verify-traefik-stack.sh
+sh ./swarmpit-stack/verify-swarmpit-stack.sh
+sh ./jenkins-stack/verify-jenkins-stack.sh
