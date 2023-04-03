@@ -59,7 +59,7 @@ services:
           - node.platform.os == linux
 
   influxdb:
-    image: influxdb:1.7
+    image: influxdb:1.8
     logging: *default-logging
     volumes:
       - influx-data:/var/lib/influxdb
