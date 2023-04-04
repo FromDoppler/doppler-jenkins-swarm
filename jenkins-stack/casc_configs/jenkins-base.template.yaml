@@ -24,7 +24,71 @@ jobs:
           github {
             repoOwner('FromDoppler')
             apiUri('https://api.github.com')
-            credentialsId('${GITHUB_ACCESS}')
+            credentialsId('${GITHUB_FROMDOPPLER_ACCESS}')
+            traits {
+              gitHubBranchDiscovery {
+                strategyId(1)
+              }
+              gitHubPullRequestDiscovery {
+                strategyId(2)
+              }
+              gitHubTagDiscovery()
+              cloneOption {
+                extension {
+                  noTags(false)
+                  shallow(false)
+                  reference('')
+                  honorRefspec(false)
+                  timeout(10)
+                }
+              }
+              notificationContextTrait {
+                contextLabel('${CI_CONTEXT_LABEL}')
+                typeSuffix(true)
+              }
+              gitHubIgnoreDraftPullRequestFilter()
+              refSpecs {
+                templates {
+                  refSpecTemplate {
+                    value('+refs/heads/*:refs/remotes/@{remote}/*')
+                  }
+                }
+              }
+            }
+          }
+        }
+        projectFactories {
+          workflowMultiBranchProjectFactory {
+            scriptPath('${JENKINSFILE_NAME}')
+          }
+        }
+        buildStrategies {
+          buildChangeRequests {
+            ignoreTargetOnlyChanges(false)
+            ignoreUntrustedChanges(false)
+          }
+          buildNamedBranches {
+            filters {
+              regex {
+                regex('${BUILD_BRANCHES_REGEX}')
+                caseSensitive(true)
+              }
+            }
+          }
+          skipInitialBuildOnFirstBranchIndexing()
+        }
+        triggers {
+          cron('@daily')
+        }
+      }
+      organizationFolder('MakingSense') {
+        description('MakingSense GitHubOrganization ${ENVIRONMENT}')
+        displayName('MakingSense ${ENVIRONMENT}')
+        organizations {
+          github {
+            repoOwner('MakingSense')
+            apiUri('https://api.github.com')
+            credentialsId('${GITHUB_MAKINGSENSE_ACCESS}')
             traits {
               gitHubBranchDiscovery {
                 strategyId(1)
