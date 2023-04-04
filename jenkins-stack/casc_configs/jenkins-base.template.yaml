@@ -24,7 +24,7 @@ jobs:
           github {
             repoOwner('FromDoppler')
             apiUri('https://api.github.com')
-            credentialsId('${GITHUB_ACCESS}')
+            credentialsId('${GITHUB_FROMDOPPLER_ACCESS}')
             traits {
               gitHubBranchDiscovery {
                 strategyId(1)
