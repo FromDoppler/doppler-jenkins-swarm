@@ -39,6 +39,7 @@ lastmodified
 andresmoschini
 PRODTEST
 cdhelper
+makingsense
 
 # Technical terms
 automerge
