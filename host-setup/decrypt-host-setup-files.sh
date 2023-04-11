@@ -44,3 +44,7 @@ sops \
 sops \
   --output "./docker/config.secret.shared.json" \
   --decrypt "./docker/config.encrypted.secret.shared.json"
+
+sops \
+  --output "./aws/credentials.secret.shared" \
+  --decrypt "./aws/credentials.encrypted.secret.shared"

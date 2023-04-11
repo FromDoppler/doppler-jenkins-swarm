@@ -43,6 +43,8 @@ expectedFiles="\
   ./ssh/id_rsa.secret.shared \
   ./ssh/known_hosts \
   ./ssh/id_rsa.pub \
+  ./aws/config \
+  ./aws/credentials.secret.shared \
   ./docker/config.secret.shared.json"
 for expectedFile in ${expectedFiles}; do
   if ! [ -f "${expectedFile}" ]; then
