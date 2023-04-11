@@ -54,3 +54,10 @@ dockerPath="/root/.docker"
 chmod 600 ./host-setup/docker/config.secret.shared.json
 mkdir -p "${dockerPath}"
 mv -n ./host-setup/docker/config.secret.shared.json "${dockerPath}"/config.json
+
+# AWS login
+awsPath="/var/lib/jenkins/.aws"
+chmod 600 ./host-setup/aws/credentials.secret.shared
+mkdir -p  "${awsPath}"
+cp -n ./host-setup/aws/config "${awsPath}"
+mv -n ./host-setup/aws/credentials.secret.shared "${awsPath}/credentials"
