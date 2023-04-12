@@ -49,16 +49,16 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=traefik"
-        - "traefik.http.services.jenkins_service_${ENVIRONMENT:?}.loadbalancer.server.port=8080"
-        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.entrypoints=web_entry_point"
-        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
-        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
-        - "traefik.http.routers.jenkins_http_route_${ENVIRONMENT:?}.middlewares=http_to_https@file"
-        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.entrypoints=websecure_entry_point"
-        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.service=jenkins_service_${ENVIRONMENT:?}"
-        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
-        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls=true"
-        - "traefik.http.routers.jenkins_https_route_${ENVIRONMENT:?}.tls.certResolver=letsencryptresolver"
+        - "traefik.http.services.jenkins_service_${JENKINS_PREFIX_SEGMENT:?}.loadbalancer.server.port=8080"
+        - "traefik.http.routers.jenkins_http_route_${JENKINS_PREFIX_SEGMENT:?}.entrypoints=web_entry_point"
+        - "traefik.http.routers.jenkins_http_route_${JENKINS_PREFIX_SEGMENT:?}.service=jenkins_service_${JENKINS_PREFIX_SEGMENT:?}"
+        - "traefik.http.routers.jenkins_http_route_${JENKINS_PREFIX_SEGMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_http_route_${JENKINS_PREFIX_SEGMENT:?}.middlewares=http_to_https@file"
+        - "traefik.http.routers.jenkins_https_route_${JENKINS_PREFIX_SEGMENT:?}.entrypoints=websecure_entry_point"
+        - "traefik.http.routers.jenkins_https_route_${JENKINS_PREFIX_SEGMENT:?}.service=jenkins_service_${JENKINS_PREFIX_SEGMENT:?}"
+        - "traefik.http.routers.jenkins_https_route_${JENKINS_PREFIX_SEGMENT:?}.rule=Host(`${DOMAIN:?}`) && PathPrefix(`/${JENKINS_PREFIX_SEGMENT:?}/`)"
+        - "traefik.http.routers.jenkins_https_route_${JENKINS_PREFIX_SEGMENT:?}.tls=true"
+        - "traefik.http.routers.jenkins_https_route_${JENKINS_PREFIX_SEGMENT:?}.tls.certResolver=letsencryptresolver"
       replicas: ${REPLICAS:?}
       mode: replicated
       restart_policy:
