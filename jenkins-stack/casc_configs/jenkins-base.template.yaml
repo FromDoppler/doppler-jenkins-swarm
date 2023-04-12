@@ -1,6 +1,6 @@
 jenkins:
   systemMessage: |+
-    Doppler Jenkins ${ENVIRONMENT}
+    Doppler Jenkins ${JENKINS_PREFIX_SEGMENT}
   numExecutors: 5
   authorizationStrategy:
     # https://plugins.jenkins.io/github-oauth/
@@ -18,8 +18,8 @@ unclassified:
 jobs:
   - script: |
       organizationFolder('FromDoppler') {
-        description('FromDoppler GitHubOrganization ${ENVIRONMENT}')
-        displayName('FromDoppler ${ENVIRONMENT}')
+        description('FromDoppler GitHubOrganization ${JENKINS_PREFIX_SEGMENT}')
+        displayName('FromDoppler ${JENKINS_PREFIX_SEGMENT}')
         organizations {
           github {
             repoOwner('FromDoppler')
@@ -82,8 +82,8 @@ jobs:
         }
       }
       organizationFolder('MakingSense') {
-        description('MakingSense GitHubOrganization ${ENVIRONMENT}')
-        displayName('MakingSense ${ENVIRONMENT}')
+        description('MakingSense GitHubOrganization ${JENKINS_PREFIX_SEGMENT}')
+        displayName('MakingSense ${JENKINS_PREFIX_SEGMENT}')
         organizations {
           github {
             repoOwner('MakingSense')
