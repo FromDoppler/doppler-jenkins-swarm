@@ -75,6 +75,10 @@ jobs:
               }
             }
           }
+          buildTags {
+            atLeastDays('-1')
+            atMostDays('1')
+          }
           skipInitialBuildOnFirstBranchIndexing()
         }
         triggers {
@@ -147,6 +151,10 @@ jobs:
                 caseSensitive(true)
               }
             }
+          }
+          buildTags {
+            atLeastDays('-1')
+            atMostDays('1')
           }
           skipInitialBuildOnFirstBranchIndexing()
         }
