@@ -101,3 +101,4 @@ mozilla
 letsencrypt
 swarmpit
 couchdb
+jenkinsci
