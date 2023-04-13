@@ -79,7 +79,6 @@ jobs:
             atLeastDays('-1')
             atMostDays('1')
           }
-          skipInitialBuildOnFirstBranchIndexing()
         }
         triggers {
           cron('@daily')
@@ -156,7 +155,6 @@ jobs:
             atLeastDays('-1')
             atMostDays('1')
           }
-          skipInitialBuildOnFirstBranchIndexing()
         }
         triggers {
           cron('@daily')
