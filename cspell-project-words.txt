@@ -37,6 +37,7 @@ spanish
 safevolumes
 lastmodified
 andresmoschini
+RodrigoPereyraDiaz
 PRODTEST
 cdhelper
 makingsense
