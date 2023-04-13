@@ -90,7 +90,7 @@ jobs:
           // Also build PRs from forks
           traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
             strategyId('2')
-            trust(class: "org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustPermission")
+            trust(class: "org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustContributors")
           }
         }
       }
@@ -167,7 +167,7 @@ jobs:
           // Also build PRs from forks
           traits << 'org.jenkinsci.plugins.github__branch__source.ForkPullRequestDiscoveryTrait' {
             strategyId('2')
-            trust(class: "org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustPermission")
+            trust(class: "org.jenkinsci.plugins.github_branch_source.ForkPullRequestDiscoveryTrait$TrustContributors")
           }
         }
       }
