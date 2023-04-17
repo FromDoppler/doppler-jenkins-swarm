@@ -2,6 +2,15 @@
 
 This repository has the configuration as code of our Jenkins service.
 
+## ⚠️ Caution
+
+Some changes in the jobs definition ([jenkins-base.template.yaml](./jenkins-stack/casc_configs/jenkins-base.template.yaml))
+does not impact in the inner repositories jobs. In that cases, removing the organization folder and
+run the scripts again (See [#how-to-use-it](#how-to-use-it)) could work.
+
+**When the organization folder is scanned for the first time (because we have removed it or in a pristine installation),
+it is important to pay attention to the builds because it can run deploys of tags already deployed.**
+
 ## How to use it
 
 Note: _See [Initial host setup section](#initial-host-setup) if you are setting up it in a new server._
