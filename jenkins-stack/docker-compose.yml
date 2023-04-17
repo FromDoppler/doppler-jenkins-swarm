@@ -28,6 +28,7 @@ services:
       - CASC_JENKINS_CONFIG=/jenkins-swarm/casc_configs
     volumes:
       - /var/lib/jenkins/.ssh:/root/.ssh
+      - /var/lib/jenkins/.aws:/root/.aws
       - /var/run/docker.sock:/var/run/docker.sock
       - /root/.gnupg:/root/.gnupg
       - jenkins-data:/var/jenkins_home
