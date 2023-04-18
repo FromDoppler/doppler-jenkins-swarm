@@ -17,15 +17,15 @@ export MSYS2_ARG_CONV_EXCL="*"
 
 print_help () {
     echo ""
-    echo "Usage: sh verify-all.sh [OPTIONS]"
+    echo "Usage: sh deploy-cronjob-stack.sh [OPTIONS]"
     echo ""
-    echo "Verify all definition files."
+    echo "Deploy current folder's files into a Docker stack"
     echo ""
     echo "Options:"
     echo "  -h, --help"
     echo
     echo "Examples:"
-    echo "  sh verify-all.sh"
+    echo "  deploy-cronjob-stack.sh"
 }
 
 for i in "$@" ; do
@@ -37,8 +37,6 @@ case $i in
 esac
 done
 
-sh ./host-setup/verify-host-setup.sh
-sh ./traefik-stack/verify-traefik-stack.sh
-sh ./swarmpit-stack/verify-swarmpit-stack.sh
-sh ./cronjob-stack/verify-cronjob-stack.sh
-sh ./jenkins-stack/verify-jenkins-stack.sh
+docker stack deploy \
+    --with-registry-auth \
+    --compose-file docker-compose.yml cronjob

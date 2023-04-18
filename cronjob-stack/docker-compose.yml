@@ -1,0 +1,36 @@
+version: "3.8"
+# cSpell:enableCompoundWords
+
+x-logging: &default-logging
+  options:
+    max-size: "10m"
+    max-file: "5"
+  driver: json-file
+
+services:
+  swarm-cronjob:
+    image: crazymax/swarm-cronjob:1.12.0
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - "LOG_LEVEL=info"
+      - "LOG_JSON=false"
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+    logging: *default-logging
+  prune-docker-until-1h-each-15m:
+    image: docker
+    command: ["docker", "system", "prune", "-f", "--filter", "until=1h"]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      mode: global
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=*/15 * * * *"
+        - "swarm.cronjob.skip-running=true"
+      restart_policy:
+        condition: none
+    logging: *default-logging

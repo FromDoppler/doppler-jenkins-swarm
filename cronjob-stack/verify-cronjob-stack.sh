@@ -15,28 +15,6 @@ cd "$(dirname "$0")"
 export MSYS_NO_PATHCONV=1
 export MSYS2_ARG_CONV_EXCL="*"
 
-print_help () {
-    echo ""
-    echo "Usage: sh deploy-shared-stacks.sh [OPTIONS]"
-    echo ""
-    echo "Update shared stacks."
-    echo ""
-    echo "Options:"
-    echo "  -h, --help"
-    echo
-    echo "Examples:"
-    echo "  sh deploy-shared-stacks.sh"
-}
-
-for i in "$@" ; do
-case $i in
-    -h|--help)
-    print_help
-    exit 0
-    ;;
-esac
-done
-
-sh ./traefik-stack/deploy-traefik-stack.sh
-sh ./swarmpit-stack/deploy-swarmpit-stack.sh
-sh ./cronjob-stack/deploy-cronjob-stack.sh
+# TODO: add more validations, it is only verifying some possible issues
+# TODO: remove dependency on docker-compose
+docker-compose -f docker-compose.yml config > /dev/null
