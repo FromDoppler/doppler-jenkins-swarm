@@ -22,7 +22,7 @@ services:
     logging: *default-logging
   prune-docker:
     image: docker
-    command: ["docker", "system", "prune", "-f", "--filter", "until=2h"]
+    command: ["docker", "system", "prune", "-a", "-f", "--filter", "until=2h"]
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
