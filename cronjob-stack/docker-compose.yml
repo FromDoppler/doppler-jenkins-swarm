@@ -20,16 +20,23 @@ services:
         constraints:
           - node.role == manager
     logging: *default-logging
-  prune-docker-until-1h-each-15m:
+  prune-docker:
     image: docker
-    command: ["docker", "system", "prune", "-f", "--filter", "until=1h"]
+    command:
+      - sh
+      - -c
+      - >
+        date +'%Y-%m-%d %H:%I:%S' &&
+        docker system prune --all --force --filter until=2h &&
+        df -h / &&
+        echo ""
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     deploy:
       mode: global
       labels:
         - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=*/15 * * * *"
+        - "swarm.cronjob.schedule=*/10 * * * *"
         - "swarm.cronjob.skip-running=true"
       restart_policy:
         condition: none
