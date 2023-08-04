@@ -26,9 +26,10 @@ services:
       - sh
       - -c
       - >
-        date +'%Y-%m-%d %H:%I:%S' &&
-        docker system prune --all --force --filter until=1h &&
+        date +'%Y-%m-%d %H:%M:%S' &&
+        docker system prune --all --force --filter until=30m &&
         df -h / &&
+        date +'%Y-%m-%d %H:%M:%S' &&
         echo ""
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
