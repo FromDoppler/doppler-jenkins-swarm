@@ -42,3 +42,25 @@ services:
       restart_policy:
         condition: none
     logging: *default-logging
+  prune-docker-full:
+    image: docker
+    command:
+      - sh
+      - -c
+      - >
+        date +'%Y-%m-%d %H:%M:%S' &&
+        docker system prune --all --force &&
+        df -h / &&
+        date +'%Y-%m-%d %H:%M:%S' &&
+        echo ""
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      mode: global
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=5 */2 * * *"
+        - "swarm.cronjob.skip-running=true"
+      restart_policy:
+        condition: none
+    logging: *default-logging
