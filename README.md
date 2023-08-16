@@ -142,3 +142,31 @@ Swarm will be responsible to run our docker containers and keep them up.
 
    docker node update --label-add safevolumes=true {node id}
    ```
+
+## Clean up wasted space and minimal state backup
+
+`docker system prune --all` is not enough to avoid a leak of the space, `prune` does not clean all the unused docker objects.
+
+Ideally, we could clean up all the disk structure and start from the beginning with this repository, but it will lose the build history and Jenkins' state. It is stored in the named volumes, currently, we have these:
+
+- `/var/lib/docker/volumes/jenkins-prod_jenkins-data`
+- `/var/lib/docker/volumes/jenkins-test_jenkins-data`
+- `/var/lib/docker/volumes/swarmpit_db-data`
+- `/var/lib/docker/volumes/swarmpit_influx-data`
+- `/var/lib/docker/volumes/traefik_traefik-acme`
+
+So, it is possible to back up those folders, start the server again from a pristine status, restore the folders, and start docker.
+
+To quickly clean up Docker objects, this process is not so complete, but it is easier and it works:
+
+```shell
+systemctl stop docker.socket
+rm -rf /var/lib/docker/overlay2/*
+rm -rf /var/lib/docker/containers/*
+rm -rf /var/lib/docker/image/*
+systemctl start docker.socket
+docker system prune --all
+sh /swarm-cd/deploy-shared-stacks.sh
+sh /swarm-cd/deploy-test-stacks.sh
+sh /swarm-cd/deploy-prod-stacks.sh
+```
