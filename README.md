@@ -44,7 +44,8 @@ apt-get install \
    ca-certificates \
    curl \
    gnupg \
-   git
+   git \
+   rsync
 
 # See https://docs.docker.com/engine/install/debian/
 # shellcheck disable=SC2174
@@ -160,10 +161,12 @@ So, it is possible to back up those folders, start the server again from a prist
 To quickly clean up Docker objects, this process is not so complete, but it is easier and it works:
 
 ```shell
+# Having an empty folder is a precondition for the optimized cleanup
+# rm -rf /empty/ && mkdir -p /empty/
 systemctl stop docker.socket
-rm -rf /var/lib/docker/overlay2/*
-rm -rf /var/lib/docker/containers/*
-rm -rf /var/lib/docker/image/*
+rsync -a --delete /empty/ /var/lib/docker/overlay2/
+rsync -a --delete /empty/ /var/lib/docker/containers/
+rsync -a --delete /empty/ /var/lib/docker/image/
 systemctl start docker.socket
 docker system prune --all
 sh /swarm-cd/deploy-shared-stacks.sh
