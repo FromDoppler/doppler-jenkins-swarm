@@ -29,3 +29,4 @@ doppler-jenkins-ci.groovy
 id_rsa.pub
 host-setup/ssh/*
 **/*.GENERATED.*
+**/aws/config
