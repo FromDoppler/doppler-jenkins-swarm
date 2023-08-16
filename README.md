@@ -124,7 +124,7 @@ It will allow us to use decrypt the configuration files.
    rm /swarm-cd/sops/Production.priv.key
    ```
 
-# Create Swarm
+### Create Swarm
 
 Swarm will be responsible to run our docker containers and keep them up.
 
