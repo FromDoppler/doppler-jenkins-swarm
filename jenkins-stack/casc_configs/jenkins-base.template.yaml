@@ -8,7 +8,8 @@ jenkins:
     github:
       # Configuration permissions: management, create jobs, configuring jobs, etc
       # In general, These kinds of changes should be done by code
-      adminUserNames: andresmoschini, RodrigoPereyraDiaz
+      # cspell:disable-next-line
+      adminUserNames: andresmoschini, RodrigoPereyraDiaz, fgchaio
       # Usage permissions: start jobs, scan, view logs, etc
       organizationNames: FromDoppler
 unclassified:
